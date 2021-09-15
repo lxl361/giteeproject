@@ -1,5 +1,6 @@
 package com.zd.giteeproject.provider;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.zd.giteeproject.dto.AccessTokenDTO;
@@ -17,13 +18,21 @@ public class GiteeProvider {
                 .url("https://gitee.com/oauth/token?grant_type=authorization_code&"+"code="+accessTokenDTO.getCode()+"&"+"client_id="+accessTokenDTO.getClientId()+"&"+"redirect_uri="+accessTokenDTO.getRedirectUri()+"&"+"client_secret="+accessTokenDTO.getClientSecret())
                 .post(body)
                 .build();
+
         try (Response response = client.newCall(request).execute()) {
-            String string = response.body().string();
-            JsonParser jp = new JsonParser();
-            //将字符串解析成JSON对象
-            JsonObject jo = jp.parse(string).getAsJsonObject();
-            //获取access_token值
-            String accessToken = jo.get("access_token").getAsString();
+             String string = response.body().string();
+            System.out.println("*********"+string);
+//            //gson解析字符串
+//            JsonParser jp = new JsonParser();
+//            //将字符串解析成JSON对象
+//            JsonObject jo = jp.parse(string).getAsJsonObject();
+//            //获取access_token值
+//            String accessToken = jo.get("access_token").getAsString();
+            //fastjson解析JSON字符串
+            JSONObject jsonObject = JSONObject.parseObject(string);
+            //获取key为access_token的值
+            String accessToken = jsonObject.getString("access_token");
+            System.out.println("---->"+accessToken);
             return accessToken;
         } catch (Exception e) {
             e.printStackTrace();
