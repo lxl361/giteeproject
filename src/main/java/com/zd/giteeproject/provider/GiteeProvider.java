@@ -21,18 +21,16 @@ public class GiteeProvider {
 
         try (Response response = client.newCall(request).execute()) {
              String string = response.body().string();
-            System.out.println("*********"+string);
-//            //gson解析字符串
+              //gson解析字符串
 //            JsonParser jp = new JsonParser();
-//            //将字符串解析成JSON对象
+              //将字符串解析成JSON对象
 //            JsonObject jo = jp.parse(string).getAsJsonObject();
-//            //获取access_token值
+             //获取access_token值
 //            String accessToken = jo.get("access_token").getAsString();
             //fastjson解析JSON字符串
             JSONObject jsonObject = JSONObject.parseObject(string);
             //获取key为access_token的值
             String accessToken = jsonObject.getString("access_token");
-            System.out.println("---->"+accessToken);
             return accessToken;
         } catch (Exception e) {
             e.printStackTrace();

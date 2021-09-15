@@ -7,9 +7,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
-public class IndexController {
-    @GetMapping("/")
-    public String index(){
+public class LogoutController {
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        //销毁session
+        session.invalidate();
         return "index";
     }
 }

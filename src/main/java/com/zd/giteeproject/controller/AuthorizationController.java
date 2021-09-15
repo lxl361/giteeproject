@@ -28,6 +28,8 @@ public class AuthorizationController {
             request.getSession().setAttribute("user", user);
             return "redirect:/";
         }else {
+            //销毁session
+            request.getSession().invalidate();
             return "redirect:/";
         }
     }
