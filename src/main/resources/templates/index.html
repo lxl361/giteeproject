@@ -28,7 +28,7 @@
                 <button type="submit" class="btn btn-default">搜索</button>
             </form>
             <ul class="nav navbar-nav navbar-right">
-                <li>
+                <li th:if="${session.user==null}">
                     <a href="https://gitee.com/oauth/authorize?client_id=381c6a3595b626ac533fcc2af52197559e6475982dcb6119455167f28e13bf60&redirect_uri=http://localhost:8080/callback&response_type=code&scope=user_info">登录</a>
                 </li>
                 <li class="dropdown" th:if="${session.user!=null}">

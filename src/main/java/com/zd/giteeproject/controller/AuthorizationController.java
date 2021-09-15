@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
-
 @Controller
 public class AuthorizationController {
     @Autowired
@@ -26,7 +25,7 @@ public class AuthorizationController {
         GiteeUser user = giteeProvider.getUser(accessToken);
         if (user!=null){
             //登录成功
-            request.getSession().setAttribute("user",user);
+            request.getSession().setAttribute("user", user);
             return "redirect:/";
         }else {
             return "redirect:/";

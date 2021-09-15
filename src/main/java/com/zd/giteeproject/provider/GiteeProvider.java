@@ -1,10 +1,11 @@
 package com.zd.giteeproject.provider;
 import com.alibaba.fastjson.JSON;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.zd.giteeproject.dto.AccessTokenDTO;
 import com.zd.giteeproject.dto.GiteeUser;
 import okhttp3.*;
 import org.springframework.stereotype.Component;
-import java.io.IOException;
 
 @Component
 public class GiteeProvider {
@@ -18,25 +19,30 @@ public class GiteeProvider {
                 .build();
         try (Response response = client.newCall(request).execute()) {
             String string = response.body().string();
-            String accessToken = string.split(",")[0].split(":")[1];
+            JsonParser jp = new JsonParser();
+            //将字符串解析成JSON对象
+            JsonObject jo = jp.parse(string).getAsJsonObject();
+            //获取access_token值
+            String accessToken = jo.get("access_token").getAsString();
             return accessToken;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public GiteeUser getUser(String accessToken){
+    public GiteeUser getUser(String access_token){
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url("https://gitee.com/api/v5/user?access_token="+ accessToken)
+                .url("https://gitee.com/api/v5/user?access_token="+access_token)
+                .addHeader("Authorization", "access_token"+access_token)
                 .build();
-        try (Response response = client.newCall(request).execute()) {
+        try {
+            Response response = client.newCall(request).execute();
             String string = response.body().string();
-            GiteeUser giteeUser = JSON.parseObject(string, GiteeUser.class);
-            System.out.println("giteeUser:"+giteeUser);
+            GiteeUser giteeUser = JSON.parseObject(string,GiteeUser.class);
             return giteeUser;
-        } catch (Exception e) {
+        }catch (Exception e) {
             e.printStackTrace();
         }
         return null;
